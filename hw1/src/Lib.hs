@@ -106,13 +106,13 @@ instance Enum WeekDay where
     toEnum 5 = Saturday
     toEnum 6 = Sunday
 
-    fromEnum Monday = 0
-    fromEnum Tuesday = 1
+    fromEnum Monday    = 0
+    fromEnum Tuesday   = 1
     fromEnum Wednesday = 2
-    fromEnum Thursday = 3
-    fromEnum Friday = 4
-    fromEnum Saturday = 5
-    fromEnum Sunday = 6
+    fromEnum Thursday  = 3
+    fromEnum Friday    = 4
+    fromEnum Saturday  = 5
+    fromEnum Sunday    = 6
 
 instance Eq WeekDay where
     (==) :: WeekDay -> WeekDay -> Bool
@@ -286,19 +286,20 @@ fromList xs = foldl' insert Leaf xs
 removeNode :: (Ord a) => Tree a -> a -> Tree a
 removeNode Leaf _ = Leaf
 removeNode (Node v t1 t2) x
-	| x == v = removeRoot (Node v t1 t2)
-	| x  < v = Node v (removeNode t2 x) t2
-	| x  > v = Node v t1 (removeNode t2 x)
+        | x == v = removeRoot (Node v t1 t2)
+        | x  < v = Node v (removeNode t2 x) t2
+        | x  > v = Node v t1 (removeNode t2 x)
     where
        removeRoot :: (Ord a) => Tree a -> Tree a
        removeRoot (Node v Leaf t2) = t2
        removeRoot (Node v t1 Leaf) = t1
        removeRoot (Node v t1 t2) = (Node v2 t1 t2)
-       	where
-       	    v2 = leftistElement t2
+        where
+            v2 = leftistElement t2
 
             leftistElement :: (Ord a) => Tree a -> a
             leftistElement (Node v Leaf _) = v
-            leftistElement (Node _ t1 _) = leftistElement t1
+            leftistElement (Node _ t1 _)   = leftistElement t1
 
 --Block 4
+
