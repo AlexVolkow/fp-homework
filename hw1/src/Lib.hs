@@ -3,9 +3,15 @@ module Lib
        , smartReplicate
        , contains
        , stringSum
+       , removeAt
+       , mergeSort
        ) where
 
-import           Data.List (sort)
+import           Data.List     (sort, splitAt)
+import           System.Random (newStdGen, randomRs)
+
+randomIntList :: Int -> Int -> Int -> IO [Int]
+randomIntList n from to = take n . randomRs (from, to) <$> newStdGen
 
 --Block 1
 
@@ -25,3 +31,26 @@ contains val list = filter (elem val) list
 --Task 4
 stringSum :: String -> Int
 stringSum str = sum $ map read $ words str
+
+--Block 2
+
+--Task 1
+removeAt :: Int -> [a] -> (Maybe a, [a])
+removeAt idx list = case splitAt idx list of
+    (xs, [])   -> (Nothing, xs)
+    ([], ys)   -> (Nothing, ys)
+    (xs, y:ys) -> (Just y, xs ++ ys)
+
+--Task 2
+mergeSort :: Ord a => [a] -> [a]
+mergeSort [] = []
+mergeSort [x] = [x]
+mergeSort list = let mid = (length list) `div` 2 in
+                    merge (mergeSort $ take mid list) (mergeSort $ drop mid list)
+  where
+    merge :: (Ord a) => [a] -> [a] -> [a]
+    merge x [] = x
+    merge [] y = y
+    merge (x:xs) (y:ys)
+      | x < y     = x:(merge xs (y:ys))
+      | otherwise = y:(merge (x:xs) ys)
