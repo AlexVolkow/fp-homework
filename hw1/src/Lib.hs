@@ -95,7 +95,28 @@ data WeekDay =
   | Friday
   | Saturday
   | Sunday
-  deriving(Eq, Show, Enum)
+
+--thank you for useful course
+instance Enum WeekDay where
+    toEnum 0 = Monday
+    toEnum 1 = Tuesday
+    toEnum 2 = Wednesday
+    toEnum 3 = Thursday
+    toEnum 4 = Friday
+    toEnum 5 = Saturday
+    toEnum 6 = Sunday
+
+    fromEnum Monday = 0
+    fromEnum Tuesday = 1
+    fromEnum Wednesday = 2
+    fromEnum Thursday = 3
+    fromEnum Friday = 4
+    fromEnum Saturday = 5
+    fromEnum Sunday = 6
+
+instance Eq WeekDay where
+    (==) :: WeekDay -> WeekDay -> Bool
+    t1 == t2          = fromEnum t1 == fromEnum t2
 
 nextDay :: WeekDay -> WeekDay
 nextDay Sunday = Monday
@@ -131,7 +152,17 @@ data Citizens =
   | Two
   | Three
   | Four
-  deriving(Eq, Show, Enum)
+
+instance Enum Citizens where
+    fromEnum One   = 1
+    fromEnum Two   = 2
+    fromEnum Three = 3
+    fromEnum Four  = 4
+
+    toEnum 1 = One
+    toEnum 2 = Two
+    toEnum 3 = Three
+    toEnum 4 = Four
 
 data Defence = Defence
   { castle :: Castle
@@ -171,7 +202,7 @@ buildWalls city@(City (Just (Defence (Castle lord) Nothing)) entr houses) walls
   | otherwise = Left "Not enough citizens"
     where
       allCitizens :: City -> Int
-      allCitizens (City _ _ h) = foldl (\x (House citizens) -> x + fromEnum citizens + 1) 0 h
+      allCitizens (City _ _ h) = foldl (\x (House citizens) -> x + fromEnum citizens) 0 h
 buildWalls _ _ = Left "No lord in city"
 
 --Task 3
@@ -225,7 +256,6 @@ instance Num Nat where
 data Tree a
   = Leaf
   | Node a (Tree a) (Tree a)
-  deriving (Show)
 
 isEmpty :: Tree a -> Bool
 isEmpty Leaf = True
