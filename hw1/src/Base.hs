@@ -1,6 +1,6 @@
 {-# LANGUAGE InstanceSigs #-}
 
-module Lib
+module Base
        ( order3
        , smartReplicate
        , contains
@@ -12,7 +12,7 @@ module Lib
        , afterDays
        , isWeekend
        , daysToParty
-       , Lord (..)
+       , Lord
        , Entertainment (..)
        , Citizens (..)
        , House (..)
@@ -37,10 +37,6 @@ module Lib
 import           Data.Foldable      (foldl')
 import           Data.List          (sort, splitAt)
 import           Data.List.NonEmpty (NonEmpty (..), cons)
-import           System.Random      (newStdGen, randomRs)
-
-randomIntList :: Int -> Int -> Int -> IO [Int]
-randomIntList n from to = take n . randomRs (from, to) <$> newStdGen
 
 --Block 1
 
@@ -96,7 +92,6 @@ data WeekDay =
   | Saturday
   | Sunday
 
---thank you for useful course
 instance Enum WeekDay where
     toEnum 0 = Monday
     toEnum 1 = Tuesday
@@ -105,6 +100,7 @@ instance Enum WeekDay where
     toEnum 4 = Friday
     toEnum 5 = Saturday
     toEnum 6 = Sunday
+    toEnum _ = error "WeekDay must be from 0 to 6"
 
     fromEnum Monday    = 0
     fromEnum Tuesday   = 1
@@ -138,9 +134,9 @@ daysToParty = countDays 0
 --Task 2
 
 data City = City
-  { defence       :: Maybe Defence
-  , entertainment :: Maybe Entertainment
-  , houses        :: NonEmpty House
+  { mDefence       :: Maybe Defence
+  , mEntertainment :: Maybe Entertainment
+  , mHouses        :: NonEmpty House
   }
 
 data Entertainment = Library | Church
@@ -163,10 +159,11 @@ instance Enum Citizens where
     toEnum 2 = Two
     toEnum 3 = Three
     toEnum 4 = Four
+    toEnum _ = error "Unsupported count of citizens"
 
 data Defence = Defence
-  { castle :: Castle
-  , walls  :: Maybe Walls
+  { mCastle :: Castle
+  , mWalls  :: Maybe Walls
   }
 
 type Lord = String
@@ -288,18 +285,17 @@ removeNode Leaf _ = Leaf
 removeNode (Node v t1 t2) x
         | x == v = removeRoot (Node v t1 t2)
         | x  < v = Node v (removeNode t2 x) t2
-        | x  > v = Node v t1 (removeNode t2 x)
+        | otherwise = Node v t1 (removeNode t2 x)
+
+removeRoot :: (Ord a) => Tree a -> Tree a
+removeRoot Leaf = Leaf
+removeRoot (Node _ Leaf t2) = t2
+removeRoot (Node _ t1 Leaf) = t1
+removeRoot (Node _ t1 t2) = (Node v2 t1 t2)
     where
-       removeRoot :: (Ord a) => Tree a -> Tree a
-       removeRoot (Node v Leaf t2) = t2
-       removeRoot (Node v t1 Leaf) = t1
-       removeRoot (Node v t1 t2) = (Node v2 t1 t2)
-        where
-            v2 = leftistElement t2
+        v2 = minElement t2
 
-            leftistElement :: (Ord a) => Tree a -> a
-            leftistElement (Node v Leaf _) = v
-            leftistElement (Node _ t1 _)   = leftistElement t1
-
---Block 4
-
+minElement :: (Ord a) => Tree a -> a
+minElement (Node v Leaf _) = v
+minElement (Node _ t1 _)   = minElement t1
+minElement Leaf = error "Argument must not be Leaf"
