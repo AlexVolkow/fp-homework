@@ -298,4 +298,4 @@ removeRoot (Node _ t1 t2) = (Node v2 t1 t2)
 minElement :: (Ord a) => Tree a -> a
 minElement (Node v Leaf _) = v
 minElement (Node _ t1 _)   = minElement t1
-minElement Leaf = error "Argument must not be Leaf"
+minElement Leaf            = error "Argument must not be Leaf"

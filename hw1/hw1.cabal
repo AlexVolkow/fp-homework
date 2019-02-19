@@ -18,7 +18,7 @@ tested-with:         GHC == 8.0.1
 
 library
   hs-source-dirs:      src
-  exposed-modules:     Base, Foldable
+  exposed-modules:     Base, Foldable, Monoids
   ghc-options:         -Wall
   build-depends:       base >= 4.9 && < 5, random
   default-language:    Haskell2010
