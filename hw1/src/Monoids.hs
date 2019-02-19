@@ -28,6 +28,7 @@ data ThisOrThat a b = This a | That b | Both a b
 instance Semigroup (ThisOrThat a b) where
     (This a) <> (That b) = Both a b
     (That a) <> (This b) = Both b a
+    _ <> Both a b = Both a b
     c <> _ = c
 
 --Task 3
