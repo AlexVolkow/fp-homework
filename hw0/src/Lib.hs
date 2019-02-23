@@ -8,6 +8,7 @@ module Lib
 import           Data.Either
 import           Data.Function (fix)
 import           Data.Void     (Void)
+import           Data.Maybe    (mapMaybe)
 
 --Task 1
 
@@ -45,22 +46,61 @@ right (Right c)        = Right (Right c)
 
 --Task 2
 
-{-type Neg a = a -> Void
+type Neg a = a -> Void
 
 doubleNeg :: a -> Neg (Neg a)
-doubleNeg a = undefined
+doubleNeg p f = f p
+
+contorpos :: (a -> b) -> ((Neg b) -> (Neg a))
+contorpos f g = g . f
+
+acs4 :: a -> (Either a (Neg a))
+acs4 = Left
+
+acs5 :: (Neg a) -> (Either a (Neg a))
+acs5 = Right
+
+acs1 :: Neg (Either a (Neg a)) -> Neg a
+acs1 = contorpos acs4
+acs2 :: Neg (Either a (Neg a)) -> Neg (Neg a)
+acs2 = contorpos acs5
+
+asc3 :: (Neg (Either a (Neg a)) -> Neg a) -> (Neg (Either a (Neg a)) -> Neg (Neg a)) -> (Neg (Neg (Either a (Neg a))))
+asc3 a b c = b c (a c)
 
 excludedNeg :: Neg (Neg (Either a (Neg a)))
-excludedNeg = undefined
+excludedNeg = asc3 acs1 acs2
 
+{-
+Модель Крипке
+v1 = 1 2 3 4 5 6 7
+v2 = 2
+v3 = 2 3
+v4 = 2 3 4
+v5 = 2 3 4 5
+v6 = 2 3 4 5 6
+v7 = 2 3 4 5 6 7
+a=3, b=1
+-}
 pierce :: ((a -> b) -> a) -> a
 pierce = undefined
 
+{-
+Модель Крипке
+v1 = 1 2 3 4 5 6 7
+v2 = 2
+v3 = 2 3
+v4 = 2 3 4
+v5 = 2 3 4 5
+v6 = 2 3 4 5 6
+v7 = 2 3 4 5 6 7
+a=3
+-}
 doubleNegElim :: Neg (Neg a) -> a
 doubleNegElim = undefined
 
 thirdNegElim :: Neg (Neg (Neg a)) -> Neg a
-thirdNegElim = undefined-}
+thirdNegElim f p = f (doubleNeg p)
 
 --Task 3
 
@@ -74,7 +114,7 @@ composition :: (b -> c) -> (a -> b) -> a -> c
 composition = s (k s) k
 
 identity :: a -> a
-identity a = a
+identity = s k k
 
 contraction :: (a -> a -> b) -> a -> b
 contraction = s s (k identity)
@@ -129,6 +169,18 @@ churchToInt :: Nat Integer  -> Integer
 churchToInt num = num (+ 1) 0
 
 --Task 6
+
+a6 = distributivity (Left ("harold" ++ " hide " ++ "the " ++ "pain"))
+{-WNHF = "(_, _)"-}
+
+b6 = null $ mapMaybe foo "pole chudes ochen' chudesno"
+{-WNHF = "False"-}
+
+foo :: Char -> Maybe Double
+foo char =
+    case char == 'o' of
+      True -> Just $ exp pi
+      False -> Nothing
 
 --Task 7
 
