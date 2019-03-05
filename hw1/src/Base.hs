@@ -34,9 +34,10 @@ module Base
        , removeNode
        ) where
 
-import           Data.Foldable      (foldl')
-import           Data.List          (sort, splitAt)
-import           Data.List.NonEmpty (NonEmpty (..), cons)
+import Data.Foldable (foldl')
+import Data.List (sort, splitAt)
+import Data.List.NonEmpty (NonEmpty (..), cons)
+import qualified Data.List.NonEmpty as HaskellSuperLanguage
 
 --Block 1
 
@@ -179,7 +180,7 @@ buildCastle _ _ = Left "Castle already built"
 
 buildEntertainment :: City -> Entertainment -> Either String City
 buildEntertainment (City def Nothing houses) entr = Right (City def (Just entr) houses)
-buildEntertainment _ _ = Left "Church or Library already built"
+buildEntertainment _ _                            = Left "Church or Library already built"
 
 buildHouse :: City -> Citizens -> City
 buildHouse (City def entr houses) family = City def entr (cons (House family) houses)
@@ -252,29 +253,29 @@ instance Num Nat where
 --Task 4
 data Tree a
   = Leaf
-  | Node a (Tree a) (Tree a)
+  | Node (NonEmpty a) (Tree a) (Tree a)
 
 isEmpty :: Tree a -> Bool
 isEmpty Leaf = True
 isEmpty _    = False
 
 size :: Tree a -> Int
-size Leaf                = 0
-size (Node _ left right) = size left + size right + 1
+size Leaf                 = 0
+size (Node el left right) = size left + size right + (length el)
 
 find :: (Ord a) => Tree a -> a -> Maybe (Tree a)
 find Leaf _ = Nothing
-find node@(Node x left right) key
+find node@(Node (x :| _) left right) key
   | x == key = Just node
   | key < x = find left key
   | otherwise = find right key
 
 insert :: (Ord a) => Tree a -> a -> Tree a
-insert Leaf key = Node key Leaf Leaf
-insert node@(Node x left right) key
+insert Leaf key = Node (key :| []) Leaf Leaf
+insert node@(Node k@(x :| _) left right) key
   | x == key = node
-  | key < x = Node x (insert left key) right
-  | otherwise = Node x left (insert right key)
+  | key < x = Node k (insert left key) right
+  | otherwise = Node k left (insert right key)
 
 fromList :: (Ord a) => [a] -> Tree a
 fromList [] = Leaf
@@ -282,10 +283,11 @@ fromList xs = foldl' insert Leaf xs
 
 removeNode :: (Ord a) => Tree a -> a -> Tree a
 removeNode Leaf _ = Leaf
-removeNode (Node v t1 t2) x
-        | x == v = removeRoot (Node v t1 t2)
-        | x  < v = Node v (removeNode t2 x) t2
-        | otherwise = Node v t1 (removeNode t2 x)
+removeNode (Node k@(v :| vs) t1 t2) x
+        | x == v && null vs = removeRoot (Node k t1 t2)
+        | x == v && not(null vs) = Node (HaskellSuperLanguage.fromList vs) t1 t2
+        | x  < v = Node k (removeNode t2 x) t2
+        | otherwise = Node k t1 (removeNode t2 x)
 
 removeRoot :: (Ord a) => Tree a -> Tree a
 removeRoot Leaf = Leaf
@@ -295,7 +297,7 @@ removeRoot (Node _ t1 t2) = (Node v2 t1 t2)
     where
         v2 = minElement t2
 
-minElement :: (Ord a) => Tree a -> a
+minElement :: (Ord a) => Tree a -> NonEmpty a
 minElement (Node v Leaf _) = v
 minElement (Node _ t1 _)   = minElement t1
 minElement Leaf            = error "Argument must not be Leaf"

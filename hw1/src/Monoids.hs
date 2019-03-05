@@ -6,7 +6,7 @@ module Monoids
   , toString
   ) where
 
-import           Data.Semigroup (Semigroup (..))
+import Data.Semigroup (Semigroup (..))
 
 --Block 5
 
@@ -34,12 +34,14 @@ instance Semigroup (ThisOrThat a b) where
 
 --Task 3
 
-data Builder = One Char | Many [Builder]
+data Builder = One Char | Many [Builder] deriving Show
 
 instance Semigroup Builder where
     x@(One _) <> y@(One _) = Many [x, y]
     (Many xs) <> (Many ys) = Many (xs ++ ys)
+    b <> (Many []) = b
     b <> (Many bs) = Many (b : bs)
+    (Many []) <> b = b
     (Many bs) <> b = Many (bs ++ [b])
 
 instance Monoid Builder

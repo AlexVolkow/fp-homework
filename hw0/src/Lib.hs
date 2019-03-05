@@ -3,12 +3,29 @@
 module Lib
     ( distributivity
     , associator
+    , eitherAssoc
+    , doubleNeg
+    , excludedNeg
+    , pierce
+    , doubleNegElim
+    , thirdNegElim
+    , composition
+    , identity
+    , contraction
+    , permutation
+    , iterateElement
+    , fibonacci
+    , factorial
+    , mapFix
+    , zero
+    , succChurch
+    , churchPlus
+    , churchMult
+    , churchToInt
     ) where
 
-import           Data.Either
-import           Data.Function (fix)
-import           Data.Void     (Void)
-import           Data.Maybe    (mapMaybe)
+import Data.Function (fix)
+import Data.Void (Void)
 
 --Task 1
 
@@ -80,7 +97,7 @@ v4 = 2 3 4
 v5 = 2 3 4 5
 v6 = 2 3 4 5 6
 v7 = 2 3 4 5 6 7
-a=3, b=1
+a = 3, b = 1
 -}
 pierce :: ((a -> b) -> a) -> a
 pierce = undefined
@@ -94,7 +111,7 @@ v4 = 2 3 4
 v5 = 2 3 4 5
 v6 = 2 3 4 5 6
 v7 = 2 3 4 5 6 7
-a=3
+a = 3
 -}
 doubleNegElim :: Neg (Neg a) -> a
 doubleNegElim = undefined
@@ -133,14 +150,14 @@ iterateElement = fix go
 fibonacci :: Integer -> Integer
 fibonacci = fix go 1 0
       where
-        go f a b 0 = b
-        go f a b 1 = a
+        go _ _ b 0 = b
+        go _ a _ 1 = a
         go f a b n = f (a + b) a (n - 1)
 
 factorial :: Integer -> Integer
 factorial = fix go
       where
-        go f 0 = 1
+        go _ 0 = 1
         go f n = n * f (n - 1)
 
 mapFix :: (a -> b) -> [a] -> [b]
@@ -154,7 +171,7 @@ mapFix f = fix go
 type Nat a = (a -> a) -> a -> a
 
 zero :: Nat a
-zero f x = x
+zero _ x = x
 
 succChurch :: Nat a -> Nat a
 succChurch num = \f -> \x -> num f (f x)
@@ -170,21 +187,21 @@ churchToInt num = num (+ 1) 0
 
 --Task 6
 
-a6 = distributivity (Left ("harold" ++ " hide " ++ "the " ++ "pain"))
+--a6 = distributivity (Left ("harold" ++ " hide " ++ "the " ++ "pain"))
 {-WNHF = "(_, _)"-}
 
-b6 = null $ mapMaybe foo "pole chudes ochen' chudesno"
+--b6 = null $ mapMaybe foo "pole chudes ochen' chudesno"
 {-WNHF = "False"-}
 
-foo :: Char -> Maybe Double
+{-foo :: Char -> Maybe Double
 foo char =
     case char == 'o' of
       True -> Just $ exp pi
-      False -> Nothing
+      False -> Nothing-}
 
 --Task 7
 
-a7 = null . head $ map (uncurry id) [((++) "Dorian ", " Grey")]
+--a7 = null . head $ map (uncurry id) [((++) "Dorian ", " Grey")]
 {-
 a) . : (b -> c) -> (a -> b) -> (a -> c)
 b) id : a -> a
@@ -202,10 +219,10 @@ m) head $ map (uncurry id) [((++) "Dorian ", " Grey")] = "Dorian Grey" : String
 n) null . head $ map (uncurry id) [((++) "Dorian ", " Grey")] = "False" : Bool
 -}
 
-b7 = (\x -> zip (lefts x) (rights x)) [Left (1 + 2), Right (2 ^ 6)]
+--b7 = (\x -> zip (lefts x) (rights x)) [Left (1 + 2), Right (2 ^ 6)]
 {-
-a) lefts :: [Either a b] -> [a]
-b) rights :: [Either a b] -> [b]
+a) lefts : [Either a b] -> [a]
+b) rights : [Either a b] -> [b]
 c) zip : [a] -> [b] -> [(a,b)]
 d) Left (1 + 2) : Either Integer b
 e) Right (2 ^ 6) : Either a Integer
