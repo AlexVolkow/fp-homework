@@ -89,29 +89,13 @@ excludedNeg :: Neg (Neg (Either a (Neg a)))
 excludedNeg = asc3 acs1 acs2
 
 {-
-Модель Крипке
-v1 = 1 2 3 4 5 6 7
-v2 = 2
-v3 = 2 3
-v4 = 2 3 4
-v5 = 2 3 4 5
-v6 = 2 3 4 5 6
-v7 = 2 3 4 5 6 7
-a = 3, b = 1
+Нельзя заселить.
 -}
 pierce :: ((a -> b) -> a) -> a
 pierce = undefined
 
 {-
-Модель Крипке
-v1 = 1 2 3 4 5 6 7
-v2 = 2
-v3 = 2 3
-v4 = 2 3 4
-v5 = 2 3 4 5
-v6 = 2 3 4 5 6
-v7 = 2 3 4 5 6 7
-a = 3
+Нельзя заселить.
 -}
 doubleNegElim :: Neg (Neg a) -> a
 doubleNegElim = undefined
