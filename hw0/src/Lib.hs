@@ -191,7 +191,7 @@ a) . : (b -> c) -> (a -> b) -> (a -> c)
 b) id : a -> a
 c) uncurry : (a -> b -> c) -> (a, b) -> c
 d) map : (a -> b) -> [a] -> [b]
-e) null : t -> a -> Bool
+e) null : [a] -> Bool
 f) $ : (a -> b) -> a -> b
 g) head : [a] -> a
 h) ++ : [a] -> [a] -> [a]
