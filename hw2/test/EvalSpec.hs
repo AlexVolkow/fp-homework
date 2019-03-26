@@ -8,7 +8,7 @@ spec = do
   describe "Block2.eval" $ do
    it "simple test" $ do
         eval (Sub (Mul (Const 2) (Const 3)) (Add (Const 5) (Const (-1)))) `shouldBe` (Right 2)
-   it "cosnt" $ do
+   it "const" $ do
         eval (Const 69) `shouldBe` (Right 69)
    it "add" $ do
         eval (Add (Const 1) (Const 2)) `shouldBe` (Right 3)

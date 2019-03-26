@@ -44,6 +44,7 @@ spec = do
       runParser parseInt "abc" `shouldBe` Nothing
       runParser parseInt "-abc" `shouldBe` Nothing
       runParser parseInt "+abc" `shouldBe` Nothing
+      runParser parseInt "" `shouldBe` Nothing
 
     it "parseListOfList" $ do
       runParser parseListOfList "2, 1,+10  , 3,5,-7, 2" `shouldBe` Just ([[1, 10], [5, -7, 2]], "")
@@ -51,4 +52,7 @@ spec = do
       runParser parseListOfList "0,0,0" `shouldBe` Just ([[], [], []], "")
       runParser parseListOfList "0,1,1,0" `shouldBe` Just ([[], [1], []], "")
       runParser parseListOfList "abc" `shouldBe` Nothing
+      runParser parseListOfList "" `shouldBe` Just([], "")
+      runParser parseListOfList "    " `shouldBe` Just([], "")
+
 
