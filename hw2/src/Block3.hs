@@ -93,22 +93,28 @@ parseSign = (((-1) *) <$ element '-') <|> id <$ element '+' <|> id <$ ok
 --Task 4
 
 parseListOfList :: Parser Char [[Int]]
-parseListOfList = ((:) <$> parseList <*> zeroOrMore (elementW ',' *> parseList)) <|> const [] <$> ok <* eof
+parseListOfList = ((:) <$> parseList <*> zeroOrMore (elementW ',' *> parseList)) <|> const [] <$> okW <* eof
 
 parseList :: Parser Char [Int]
-parseList = (parseIntW <* elementW ',') >>= parseArray
+parseList = parseIntW >>= parseArray
 
 parseArray :: Int -> Parser Char [Int]
 parseArray n = skipWhitespace *> impl n <* skipWhitespace
     where
-        impl 1   = pure <$> parseIntW
-        impl len = (:) <$> (parseIntW <* elementW ',') <*> parseArray (len - 1)
+        impl 0   = pure []
+        impl len = (:) <$> (elementW ',' *> parseIntW) <*> parseArray (len - 1)
 
 elementW :: Char -> Parser Char Char
-elementW s = skipWhitespace *> element s <* skipWhitespace
+elementW s = nospaces (element s)
 
 parseIntW :: Parser Char Int
-parseIntW = skipWhitespace *> parseInt <* skipWhitespace
+parseIntW = nospaces parseInt
+
+okW :: Parser Char ()
+okW = nospaces ok
+
+nospaces :: Parser Char a -> Parser Char a
+nospaces c = skipWhitespace *> c <* skipWhitespace
 
 skipWhitespace :: Parser Char String
 skipWhitespace = zeroOrMore $ satisfy isSpace

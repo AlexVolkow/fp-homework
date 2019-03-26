@@ -48,4 +48,7 @@ spec = do
     it "parseListOfList" $ do
       runParser parseListOfList "2, 1,+10  , 3,5,-7, 2" `shouldBe` Just ([[1, 10], [5, -7, 2]], "")
       runParser parseListOfList "3, 1" `shouldBe` Nothing
+      runParser parseListOfList "0,0,0" `shouldBe` Just ([[], [], []], "")
+      runParser parseListOfList "0,1,1,0" `shouldBe` Just ([[], [1], []], "")
+      runParser parseListOfList "abc" `shouldBe` Nothing
 
