@@ -19,3 +19,4 @@ class MonadFish m where
 class MonadJoin m where
   returnJoin :: a -> m a
   join :: m (m a) -> m a
+

@@ -7,8 +7,8 @@ module Block1
       fromList
     ) where
 
-import Text.Read (readMaybe)
 import Data.Foldable (toList)
+import Text.Read (readMaybe)
 
 --Task 1
 stringSum :: String -> Maybe Int
@@ -22,21 +22,21 @@ data Tree a
   deriving Show
 
 instance Functor Tree where
-    fmap f (Leaf x) = Leaf $ f x
+    fmap f (Leaf x)     = Leaf $ f x
     fmap f (Branch l r) = Branch (fmap f l) (fmap f r)
 
 instance Applicative Tree where
     pure = Leaf
 
-    (<*>) (Leaf f) t = fmap f t
+    (<*>) (Leaf f) t     = fmap f t
     (<*>) (Branch l r) t = Branch (l <*> t) (r <*> t)
 
 instance Foldable Tree where
-    foldr f acc (Leaf x) = f x acc
+    foldr f acc (Leaf x)     = f x acc
     foldr f acc (Branch l r) = foldr f (foldr f acc r) l
 
 instance Traversable Tree where
-   traverse f (Leaf x) = Leaf <$> f x
+   traverse f (Leaf x)     = Leaf <$> f x
    traverse f (Branch l r) = Branch <$> traverse f l <*> traverse f r
 
 --Task 3
@@ -66,3 +66,4 @@ instance Foldable NonEmpty where
 
 instance Traversable NonEmpty where
     traverse f (x :| xs) = (:|) <$> f x <*> traverse f xs
+

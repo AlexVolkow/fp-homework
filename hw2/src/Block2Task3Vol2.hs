@@ -4,8 +4,8 @@
 
 module Block2Task3Vol2 where
 
+import Block2Task3 (Monad (..), MonadFish (..), MonadJoin (..))
 import Prelude (id)
-import Block2Task3(Monad(..), MonadFish(..), MonadJoin(..))
 
 instance MonadFish m => MonadJoin m where
   returnJoin = returnFish
@@ -14,3 +14,4 @@ instance MonadFish m => MonadJoin m where
 instance MonadFish m => Monad m where
   return = returnFish
   (>>=) x f = (id >=> f) x
+

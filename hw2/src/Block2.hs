@@ -7,8 +7,8 @@ module Block2
     , moving
     ) where
 
-import  Control.Monad.State (evalState, State, put, get)
-import  Control.Applicative (liftA2)
+import Control.Applicative (liftA2)
+import Control.Monad.State (State, evalState, get, put)
 
 --Task 1
 
@@ -22,7 +22,7 @@ data Expr
     deriving Eq
 
 instance Show Expr where
-    show (Const x)     = show x
+    show (Const x) = show x
     show (Add l r) = show l ++ " + " ++ show r
     show (Sub l r) = show l ++ " - " ++ show r
     show (Mul l r) = show l ++ " * " ++ show r
@@ -40,9 +40,9 @@ eval (Add l r)  = liftA2 (+) (eval l) (eval r)
 eval (Sub l r)  = liftA2 (-) (eval l) (eval r)
 eval (Mul l r)  = liftA2 (*) (eval l) (eval r)
 eval (Div l r)  = case eval r of
-    (Right 0)   -> Left DivByZero
-    (Right x)   -> liftA2 div (eval l) (Right x)
-    v -> v
+    (Right 0) -> Left DivByZero
+    (Right x) -> liftA2 div (eval l) (Right x)
+    v         -> v
 eval (Pow l r)  = case eval r of
     (Right y) -> if y < 0
                    then Left PowNegate
