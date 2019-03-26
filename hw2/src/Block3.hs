@@ -1,4 +1,14 @@
-module Block3 where
+module Block3
+    ( Parser (..)
+    , ok
+    , eof
+    , satisfy
+    , element
+    , stream
+    , parseBrackets
+    , parseInt
+    , parseListOfList
+    ) where
 
 import Control.Applicative (Alternative (..))
 import Control.Monad ((>=>))

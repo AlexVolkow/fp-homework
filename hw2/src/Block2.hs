@@ -32,7 +32,7 @@ instance Show Expr where
 data ArithmeticError
   = PowNegate
   | DivByZero
-  deriving Show
+  deriving (Show, Eq)
 
 eval :: Expr -> Either ArithmeticError Int
 eval (Const x)  = pure x

@@ -1,7 +1,7 @@
-module StringSumSpec(spec) where
+module StringSumSpec where
 
-import Test.Hspec
 import Block1 (stringSum)
+import Test.Hspec
 
 spec :: Spec
 spec = do
@@ -17,3 +17,4 @@ spec = do
 
     it "empty string" $ do
       stringSum "" `shouldBe` (Just 0)
+

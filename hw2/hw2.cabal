@@ -31,6 +31,6 @@ test-suite spec
                        , QuickCheck
                        , hw2
                        , hspec
-  other-modules:       StringSumSpec
+  other-modules:       StringSumSpec, EvalSpec, ParserSpec
   ghc-options:         -Wall -Werror -threaded -rtsopts -with-rtsopts=-N
   default-language:    Haskell2010
