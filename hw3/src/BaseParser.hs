@@ -12,7 +12,10 @@ import Data.Void
 import Data.Char(isSpace)
 import qualified Data.Set as Set
 
-data Statement = Assign String [StatementValue] deriving (Show, Eq)
+data Statement
+    = Assign String [StatementValue]
+    | Command String [[StatementValue]]
+     deriving (Show, Eq)
 
 type Script = [Statement]
 
@@ -24,13 +27,30 @@ data StatementValue
 type Parser = Parsec Void String
 
 parseScript :: Parser Script
-parseScript = many parseCommand <* eof
+parseScript = many parseStatement <* eof
+
+parseStatement :: Parser Statement
+parseStatement = space *> parseCommandInternal <* endOfStatement
+    where
+       parseCommandInternal = try (parseAssign) <|> try (parseCommand)
+
+endOfStatement :: Parser String
+endOfStatement = many (satisfy (\x -> isSpace x || x == ';'))
+
+isSpaceWithoutEOL :: Parser String
+isSpaceWithoutEOL = many (satisfy (\x -> isSpace x && x /= '\n'))
 
 parseCommand :: Parser Statement
-parseCommand = space *> parseAssign <* endOfCommand
+parseCommand = (Command <$> cmd) <*> (many (isSpaceWithoutEOL *> parseStatementValue))
 
-endOfCommand :: Parser String
-endOfCommand = many (satisfy (\x -> isSpace x || x == ';'))
+parseCommandOptions :: Parser [String]
+parseCommandOptions = many (options <* space)
+
+options :: Parser String
+options = (:) <$> char '-' <*> (some letterChar)
+
+cmd :: Parser String
+cmd = string "read" <|> string "echo" <|> string "pwd" <|> string "cd" <|> string "exit"
 
 parseAssign :: Parser Statement
 parseAssign = (Assign <$> variable) <* char '=' <*> parseStatementValue

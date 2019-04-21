@@ -14,5 +14,8 @@ main = do
   case runParser parseScript "" scriptFile of
     Left e   -> putStrLn (errorBundlePretty e)
     Right script -> do
+        putStrLn (show script)
+        putStrLn ""
         env <- runScript script args
+        putStrLn ""
         putStrLn (show env)
