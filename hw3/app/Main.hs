@@ -3,7 +3,7 @@ module Main where
 import System.Environment
 
 import Interpretator
-import BaseParser
+import ShParser
 import Text.Megaparsec
 
 main :: IO ()

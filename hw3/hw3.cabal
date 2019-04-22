@@ -18,13 +18,16 @@ tested-with:         GHC == 8.0.1
 
 library
   hs-source-dirs:      src
-  exposed-modules:     BaseParser, Interpretator
+  exposed-modules:     ShParser, Interpretator
   ghc-options:         -Wall
   build-depends:       base >= 4.9 && < 5
                        , mtl
                        , transformers
                        , megaparsec
                        , containers
+                       , process
+                       , directory
+                       , filepath
   default-language:    Haskell2010
 
 executable hw3
@@ -50,6 +53,6 @@ test-suite hw3-test
                      , megaparsec
                      , QuickCheck
                      , containers
-  other-modules:       ParserBlock1Spec, ParserBlock2Spec, InterpretatorTestSpec
+  other-modules:       ParserBlock1Spec, ParserBlock2Spec, ParserBlock3Spec, InterpretatorTestSpec
   ghc-options:         -Wall -Werror -threaded -rtsopts -with-rtsopts=-N
   default-language:    Haskell2010
