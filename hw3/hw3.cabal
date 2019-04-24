@@ -30,7 +30,7 @@ library
                        , filepath
   default-language:    Haskell2010
 
-executable hw3
+executable mini-shell
   hs-source-dirs:      app
   main-is:             Main.hs
   other-modules:       Paths_hw3

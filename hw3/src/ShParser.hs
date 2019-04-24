@@ -9,15 +9,16 @@ module ShParser
 
 import Data.Char (isSpace)
 import qualified Data.Set as Set
-import Data.Void
-import Text.Megaparsec (Parsec, try, (<|>), satisfy, some, many, between, eof)
-import Text.Megaparsec.Char (alphaNumChar, char, letterChar, newline, space, string)
+import Data.Void (Void)
+import Text.Megaparsec (Parsec, between, eof, many, satisfy, some, try, (<|>))
+import Text.Megaparsec.Char (alphaNumChar, char, letterChar, space, string)
 
 type Script = [Statement]
 
 data Statement
     = Assign String StatementValue
     | Command String [StatementValue]
+    | Unknown StatementValue
      deriving (Show, Eq)
 
 type StatementValue = [StatementToken]
@@ -25,6 +26,7 @@ type StatementValue = [StatementToken]
 data StatementToken
     = Text String
     | Reference String
+    | InnerCall [Statement]
     deriving (Show, Eq)
 
 type Parser = Parsec Void String
@@ -35,31 +37,37 @@ parseScript = many parseStatement <* eof
 parseStatement :: Parser Statement
 parseStatement = space *> parseCommandInternal <* endOfStatement
     where
-       parseCommandInternal = try (parseAssign) <|> try (parseCommand)
+       parseCommandInternal = try (parseAssign) <|> try (parseCommand) <|> try (Unknown <$> parseStatementValue)
 
 endOfStatement :: Parser String
 endOfStatement = many (satisfy (\x -> isSpace x || x == ';'))
 
-isSpaceWithoutEOL :: Parser String
-isSpaceWithoutEOL = many (satisfy (\x -> isSpace x && x /= '\n'))
+spaceNoEOl :: Parser String
+spaceNoEOl = many (satisfy (\x -> isSpace x && x /= '\n'))
 
 parseCommand :: Parser Statement
-parseCommand = (Command <$> cmd) <*> (many (parseStatementValue <* isSpaceWithoutEOL))
+parseCommand = (Command <$> cmd) <*> (many (parseStatementValue <* spaceNoEOl))
 
 cmd :: Parser String
-cmd = (string "read" <|> string "echo" <|> string "pwd" <|> string "cd" <|> string "exit") <* isSpaceWithoutEOL
+cmd = spaceNoEOl *> variable <* spaceNoEOl
 
 parseAssign :: Parser Statement
 parseAssign = (Assign <$> variable) <* char '=' <*> parseStatementValue
 
 parseStatementValue :: Parser StatementValue
-parseStatementValue = fmap (concat) (some ((fmap (\x -> [x]) parseValue) <|> try(parseProcessable)))
+parseStatementValue = fmap (concat) (some (try (doubleQuote) <|> (fmap (\x -> [x]) parseValue) ))
 
 parseValueBase :: Parser StatementToken
-parseValueBase = try (Text <$> singleQuote) <|> try (Reference <$> parseReference)
+parseValueBase = try (InnerCall <$> parseInnerCall) <|> try (Text <$> singleQuote) <|> try (Reference <$> parseReference)
 
 parseValue :: Parser StatementToken
 parseValue = parseValueBase <|> try (Text <$> noQuote)
+
+parseInnerCall :: Parser [Statement]
+parseInnerCall = string "$(" *> parserCommands <* string ")"
+
+parserCommands :: Parser [Statement]
+parserCommands = (:) <$> (parseCommand <* spaceNoEOl) <*> many (char ';' *> spaceNoEOl *> parseCommand <* spaceNoEOl)
 
 singleQuote :: Parser String
 singleQuote = between (char '\'') (char '\'') (many (satisfy (/= '\'')))
@@ -67,14 +75,11 @@ singleQuote = between (char '\'') (char '\'') (many (satisfy (/= '\'')))
 parseReference :: Parser String
 parseReference = char '$' *> reference
 
-parseProcessable :: Parser StatementValue
-parseProcessable = try (doubleQuote)
-
 doubleQuote :: Parser [StatementToken]
 doubleQuote = between (char '"') (char '"') (parseStatementValueProcessable)
     where
         parseValueProcessable = parseValueBase <|> try (Text <$> noQuoteProcessable)
-        parseStatementValueProcessable = fmap (concat) (some ((fmap (\x -> [x]) parseValueProcessable) <|> try(parseProcessable)))
+        parseStatementValueProcessable = (fmap (concat) (some ((fmap (\x -> [x]) parseValueProcessable))))
 
 variable :: Parser String
 variable = (:) <$> (letterChar <|> char '_') <*> (many (alphaNumChar <|> char '_'))
@@ -100,4 +105,5 @@ escapes =  try ((!!1) <$> string "\\$")
            <|> try (head <$> string "\\\\")
            <|> try ((!!1) <$> string "\\\"")
            <|> try ((!!1) <$> string "\\'")
+
 

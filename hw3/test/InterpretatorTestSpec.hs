@@ -1,10 +1,10 @@
 module InterpretatorTestSpec where
 
-import Test.Hspec
-import ShParser
-import Interpretator(runScript, ctxVars)
-import Data.Either(fromRight)
+import ShParser (parseScript)
+import Interpretator (runScript, ctxVars)
+import Data.Either (fromRight)
 import Text.Megaparsec
+import Test.Hspec
 import qualified Data.Map as Map
 
 spec :: Spec
