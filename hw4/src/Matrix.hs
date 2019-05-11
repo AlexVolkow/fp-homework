@@ -1,15 +1,15 @@
-{-# LANGUAGE Strict       #-}
+{-# LANGUAGE Strict #-}
 
 module Matrix
     ( multiply
     ) where
 
 import qualified Control.Foldl as F
-import Control.Parallel.Strategies
+import Control.Parallel.Strategies (rdeepseq, parMap, rpar, runEval)
 import Data.List (transpose)
 
 multiply :: [[Int]] -> [[Int]] -> Maybe [[Int]]
-multiply x y = if (not(length (head x) == length y)) then Nothing else Just $ runMultiply x (transpose y)
+multiply x y = if (length (head x) /= length y) then Nothing else Just $ runMultiply x (transpose y)
     where
         runMultiply :: [[Int]] -> [[Int]] -> [[Int]]
         runMultiply a b = parMap rpar (\row -> multiplyHelper row b) a

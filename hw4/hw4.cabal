@@ -18,12 +18,13 @@ tested-with:         GHC == 8.0.1
 
 library
   hs-source-dirs:      src
-  exposed-modules:     Matrix, MatrixUtils, Geometry, GeometryUtils
+  exposed-modules:     Matrix, MatrixUtils, Geometry, GeometryUtils, Gauss, GaussUtils
   ghc-options:         -Wall
   build-depends:       base >= 4.9 && < 5
                      , parallel
                      , random
                      , foldl
+                     , vector
   default-language:    Haskell2010
 
 executable hw4
@@ -46,7 +47,7 @@ test-suite hw4-test
                      , megaparsec
                      , QuickCheck
   ghc-options:         -Wall -Werror -threaded -rtsopts -with-rtsopts=-N4
-  other-modules:       MatrixSpec, GeometrySpec
+  other-modules:       MatrixSpec, GeometrySpec, GaussSpec
   default-language:    Haskell2010
 
 benchmark hw4-bench
@@ -56,6 +57,7 @@ benchmark hw4-bench
     build-depends:       base
                        , hw4
                        , criterion
+                       , vector
     ghc-options:         -Wall -Werror -threaded -rtsopts -with-rtsopts=-N4
-    other-modules:       MatrixBench, GeometryBench
+    other-modules:       MatrixBench, GeometryBench, GaussBench
     default-language:    Haskell2010
