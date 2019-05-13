@@ -2,7 +2,7 @@ module ParserBlock1Spec where
 
 import Test.Hspec
 import ShParser
-import Data.Either(isLeft)
+import Data.Either (isLeft)
 import Text.Megaparsec
 
 spec :: Spec

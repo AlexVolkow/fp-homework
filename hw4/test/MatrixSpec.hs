@@ -16,7 +16,7 @@ spec = do
         let b = [[3, 4, 5]]
         multiply a b `shouldBe` Nothing
 
-     it "single matrixs" $ do
+     it "single matrix" $ do
         let a = [[1]]
         let b = [[2]]
         multiply a b `shouldBe` Just [[2]]

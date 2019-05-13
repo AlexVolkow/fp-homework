@@ -4,6 +4,7 @@ import Criterion.Main
 import MatrixBench (matrixMultParallel, matrixMultSequential)
 import GeometryBench (fastPerimeter, fastArea, slowPerimeter, slowArea)
 import GaussBench (guassSimple, guassOnVector)
+import HashTableBench (hashTableStressTable)
 
 main :: IO ()
 main = do
@@ -19,4 +20,5 @@ main = do
     bgroup "geometry doubleArea slow" slowArea,
     bgroup "gauss bench on vector" guassOnVector,
     bgroup "gauss bench simple" guassSimple
+    bgroup "hash table stress" hashTableStressTable
     ]

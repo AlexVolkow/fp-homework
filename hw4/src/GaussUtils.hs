@@ -1,14 +1,9 @@
 module GaussUtils
     ( gaussSlow
-    , verifySolutionSlow
     ) where
 
 gaussSlow :: [[Bool]] -> [Bool] -> Maybe [Bool]
-gaussSlow a b = x
-     where
-        b' = map (\y -> [y]) b
-        a' = zipWith (++) a b'
-        x  = fmap resubstitute (triangular a')
+gaussSlow m1 m2 = fmap resubstitute (triangular (zipWith (++) m1 (map (\y -> [y]) m2)))
 
 triangular :: [[Bool]] -> Maybe [[Bool]]
 triangular [] = pure []
@@ -34,22 +29,14 @@ rotatePivot (row:rows)
         pure (rows' ++ [row])
 
 resubstitute :: [[Bool]] -> [Bool]
-resubstitute = reverse . resubstitute' . reverse . map reverse
-
-resubstitute' :: [[Bool]] -> [Bool]
-resubstitute' [] = []
-resubstitute' (row:rows) = x:(resubstitute' rows')
-     where
-     x     = (head row) && (last row)
-     rows' = map substituteUnknown rows
-     substituteUnknown (a1:(a2:as')) = ((a1 `xor` (x && a2)):as')
-     substituteUnknown _ = error "invalid demensions of matrix"
+resubstitute = reverse . go . reverse . map reverse
+    where
+    go [] = []
+    go (row : rows) = x : (go (map dosubstitute rows))
+         where
+         x = (head row) && (last row)
+         dosubstitute (a1 : (a2 : as')) = ((a1 `xor` (x && a2)):as')
+         dosubstitute _ = error "invalid demensions of matrix"
 
 xor :: Bool -> Bool -> Bool
 xor = (/=)
-
-mapMatrix :: [[Bool]] -> [Bool] -> [Bool]
-mapMatrix rows v = [foldl xor False (zipWith (&&) row v) | row <- rows]
-
-verifySolutionSlow :: [[Bool]] -> [Bool] -> [Bool] -> Bool
-verifySolutionSlow a b c = mapMatrix a c == b
