@@ -24,7 +24,7 @@ data ConcurrentHashTable  k v = HT
     }
 
 newCHT  :: IO (ConcurrentHashTable k v)
-newCHT = mask_ $ atomically $ do
+newCHT = safeExecute $ do
     let size = 11
     slots <- replicateM size (newTVar [])
     let initTable = listArray (0, size - 1) slots
