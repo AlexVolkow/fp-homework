@@ -19,6 +19,6 @@ main = do
     bgroup "geometry doubleArea fast" fastArea,
     bgroup "geometry doubleArea slow" slowArea,
     bgroup "gauss bench on vector" guassOnVector,
-    bgroup "gauss bench simple" guassSimple
+    bgroup "gauss bench simple" guassSimple,
     bgroup "hash table stress" hashTableStressTable
     ]
