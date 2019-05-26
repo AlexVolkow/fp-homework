@@ -1,0 +1,39 @@
+name:                hw5
+version:             0.1.0.0
+synopsis:            Synopsis for task 5
+description:         Task 5 for FP ITMO course
+
+homepage:            https://github.com//fp-homework/tree/master/hw5#readme
+license:             MIT
+license-file:        LICENSE
+author:              Aleksandr Volkov
+maintainer:          alexander.volkow@gmail.com
+copyright:           2019 Aleksandr Volkov
+
+category:            Web
+build-type:          Simple
+extra-source-files:  README.md
+cabal-version:       >=1.10
+tested-with:         GHC == 8.0.1
+
+library
+  hs-source-dirs:      src
+  exposed-modules:     Lens, FSLens
+  ghc-options:         -Wall
+  build-depends:       base >= 4.9 && < 5, random
+                      , lens
+                      , filepath
+                      , directory-tree
+  default-language:    Haskell2010
+
+test-suite hw5-test
+  type:                exitcode-stdio-1.0
+  hs-source-dirs:      test
+  main-is:             Spec.hs
+  build-depends:       base
+                     , hw5
+                     , hspec
+                     , megaparsec
+                     , QuickCheck
+  other-modules:       LensSpec
+  default-language:    Haskell2010
